@@ -16,39 +16,74 @@ screen = pygame.display.set_mode([800,450])
 buttons = []
 x = 400
 y = 225
+x_direction = 10
+y_direction = 10
+x2 = 200
+y2 = 125
+x2_direction = 10
+y2_direction = -10
+x3 = 600
+y3 = 325
+x3_direction = -10
+y3_direction = 10
+
+screen.fill(WHITE)
 
 # 무한 루프
 while not done:
-    clock.tick(10)
+    clock.tick(100)
 
     # 게임 이벤트 처리
     for event in pygame.event.get():
-        # 'KEYDOWN' 이벤트 처리
-        if event.type == pygame.KEYDOWN:
-            pressed = pygame.key.get_pressed()
-            buttons = [pygame.key.name(k) for k,v in enumerate(pressed) if v]
         # 'QUIT' 이벤트 처리
-        elif event.type ==pygame.QUIT:
+        if event.type ==pygame.QUIT:
             done = True
 
-        # 'buttons' 처리
-        for btn in buttons:
-            if btn == 'right':
-                x = x + 10
-            elif btn == 'left':
-                x = x - 10
+    screen.fill(WHITE)
 
-        screen.fill(WHITE)
+   # 물체 움직이기 (좌표 변경)
+    x = x + x_direction
+    y = y + y_direction
+    x2 += x2_direction
+    y2 += y2_direction
+    x3 += x3_direction
+    y3 += y3_direction
 
-        # 그림 그리는 명령 입력
-        pygame.draw.line(screen, RED, [0, 0], [800, 450], 1)
-        pygame.draw.lines(screen, BLUE, False, [[100, 100], [200, 100], [200, 200], [100, 200]], 3)
-        pygame.draw.rect(screen, GREEN, [x, y, 50, 50], 0)
-        pygame.draw.polygon(screen, RED, [[400, 400], [500, 400], [450, 300]], 5)
+    # 벽에 부딪힘 처리
+    if x > 800:
+        x_direction = -10
+    if x < 0:
+        x_direction = 10
+    if y > 450:
+        y_direction = -10
+    if y < 0:
+        y_direction = 10
 
-        # 실제 그림을 그리는 단계
-        pygame.display.flip()
+    if x2 > 800:
+        x2_direction = -10
+    if x2 < 0:
+        x2_direction = 10
+    if y2 > 450:
+        y2_direction = -10
+    if y2 < 0:
+        y2_direction = 10
+
+    if x3 > 800:
+        x3_direction = -10
+    if x3 < 0:
+        x3_direction = 10
+    if y3 > 450:
+        y3_direction = -10
+    if y3 < 0:
+        y3_direction = 10
+
+    # 그림 그리는 명령 입력
+    pygame.draw.circle(screen, BLUE, [x, y], 20)
+    pygame.draw.circle(screen, GREEN, [x2, y2], 20)
+    pygame.draw.circle(screen, RED, [x3, y3], 20)
+
+    # 실제 그림을 그리는 단계
+    pygame.display.flip()
 
 # 게임 종료 처리
 pygame.quit()
-
