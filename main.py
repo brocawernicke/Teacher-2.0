@@ -22,6 +22,22 @@ enemy = pygame.image.load(os.path.join('images', 'enemy.png')).convert_alpha()
 enemy2 = pygame.transform.scale(enemy, (100, 100))
 explosion = pygame.image.load(os.path.join('images', 'explosion.png')).convert_alpha()
 
+class Player(object):
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+        self.x_step = 0
+        self.y_step = 0
+        self.img = pygame.image.load(os.path.join('images', 'spaceship.png')).convert_alpha()
+    def update(self, screen, x_step, y_step):
+        self.x_step = x_step
+        self.y_step = y_step
+        self.x += self.x_step
+        self.y += self.y_step
+        screen.blit(self.img, (self.x, self.y))
+
+player = Player(400, 125)
+
 buttons = []
 x = 400
 y = 220
@@ -142,6 +158,8 @@ while not done:
     screen.blit(enemy, (x1, y1))
     screen.blit(enemy, (x2, y2))
     screen.blit(enemy2, (x3, y3))
+
+    player.update(screen, x_direction, y_direction)
 
     # 물체 충돌 처리
     if abs(x - x1) < 30 and abs(y - y1) < 30:
