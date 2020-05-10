@@ -19,6 +19,7 @@ screen = pygame.display.set_mode([800,450])
 bg = pygame.image.load(os.path.join('images', 'space_bg.jpg')).convert()
 spaceship = pygame.image.load(os.path.join('images', 'spaceship.png')).convert_alpha()
 enemy = pygame.image.load(os.path.join('images', 'enemy.png')).convert_alpha()
+enemy2 = pygame.transform.scale(enemy, (100, 100))
 explosion = pygame.image.load(os.path.join('images', 'explosion.png')).convert_alpha()
 
 buttons = []
@@ -46,9 +47,14 @@ bgY2 = -450
 font1 = pygame.font.SysFont("Arial", 72)
 font2 = pygame.font.SysFont("Arial", 24)
 
+# download from https://opengameart.org/
+pygame.mixer.music.load(os.path.join('sound', 'bgm.mp3'))
+pygame.mixer.music.play(-1, 0)
+soundObj = pygame.mixer.Sound(os.path.join('sound', 'explosion.wav'))
+
 # 무한 루프
 while not done:
-    clock.tick(30)
+    clock.tick(30) #FPS
 
     # 게임 이벤트 처리
     for event in pygame.event.get():
@@ -56,18 +62,20 @@ while not done:
         if event.type ==pygame.QUIT:
             #done = True
             pygame.quit()
-            sys.exit()
+            os.sys.exit()
         # 'KEYDOWN' 이벤트 처리
         if event.type == pygame.KEYDOWN:
-            pressed = pygame.key.get_pressed()
-            buttons = [pygame.key.name(k) for k,v in enumerate(pressed) if v]
-
-        # 'buttons' 처리
-        for btn in buttons:
-            if btn == 'right':
+            if event.key == pygame.K_RIGHT:
                 x_direction = 10
-            elif btn == 'left':
+            elif event.key == pygame.K_LEFT:
                 x_direction = -10
+            elif event.key == pygame.K_SPACE:
+                x = 400
+                y = 225
+                score = 0
+                gameover = False
+        elif event.type == pygame.KEYUP:
+                x_direction = 0
 
     # 배경화면 스크롤
     bgY += 3
@@ -81,7 +89,8 @@ while not done:
     #screen.blit(bg, pygame.rect.Rect(0,0, 800, 450))
 
     # Score 표시
-    score += 1
+    if gameover == False:
+        score += 1
     score_text = font2.render("score: " + str(score), True, RED)
     screen.blit(score_text, (10, 10))
 
@@ -132,14 +141,17 @@ while not done:
     screen.blit(spaceship, (x, y))
     screen.blit(enemy, (x1, y1))
     screen.blit(enemy, (x2, y2))
-    screen.blit(enemy, (x3, y3))
+    screen.blit(enemy2, (x3, y3))
 
     # 물체 충돌 처리
     if abs(x - x1) < 30 and abs(y - y1) < 30:
+        soundObj.play() 
         gameover = True
     if abs(x - x2) < 30 and abs(y - y2) < 30:
+        soundObj.play() 
         gameover = True
     if abs(x - x3) < 30 and abs(y - y3) < 30:
+        soundObj.play() 
         gameover = True
 
     # Game Over
@@ -147,21 +159,12 @@ while not done:
         screen.blit(explosion, (x-50, y-50))
         text = font1.render("Game Over", True, WHITE)
         screen.blit(text, (400 - text.get_width() // 2, 240 - text.get_height()))
-
-    # 실제 그림을 그리는 명령
-    pygame.display.flip()
-    #pygame.display.update()
-
-    if gameover == True:
-        pygame.time.delay(1000)
-        score = 0
-        x = 400
-        y = 225
         x_direction = 0
         y_direction = 0
-        gameover = False
 
-pygame.time.delay(1000)
+    # 실제 그림을 그리는 명령
+    #pygame.display.flip()          # 전체 업데이트
+    pygame.display.update()       # 부분 업데이트(rect 또는 rect_list)
 
 # 게임 화면 종료
 pygame.quit()
