@@ -1,3 +1,9 @@
+'''
+References:
+  https://techwithtim.net/tutorials/game-development-with-python/side-scroller-pygame/background/
+  https://opengameart.org/content/9-explosion-sounds
+  https://devnauts.tistory.com/61
+'''
 # 파이썬 게임 패키지 사용
 import pygame
 import os
