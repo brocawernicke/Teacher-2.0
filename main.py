@@ -12,6 +12,7 @@ BLUE = (0, 0, 255)
 #  게임 준비
 pygame.init()
 done = False
+gameover = False
 clock = pygame.time.Clock()
 screen = pygame.display.set_mode([800,450])
 
@@ -23,7 +24,7 @@ explosion = pygame.image.load(os.path.join('images', 'explosion.png')).convert_a
 buttons = []
 x = 400
 y = 220
-x_direction = 10
+x_direction = 0
 y_direction = 0
 x1 = 450
 y1 = 220
@@ -53,7 +54,9 @@ while not done:
     for event in pygame.event.get():
         # 'QUIT' 이벤트 처리
         if event.type ==pygame.QUIT:
-            done = True
+            #done = True
+            pygame.quit()
+            sys.exit()
         # 'KEYDOWN' 이벤트 처리
         if event.type == pygame.KEYDOWN:
             pressed = pygame.key.get_pressed()
@@ -133,24 +136,30 @@ while not done:
 
     # 물체 충돌 처리
     if abs(x - x1) < 30 and abs(y - y1) < 30:
-        screen.blit(explosion, (x-50, y-50))
-        text = font1.render("Game Over", True, WHITE)
-        screen.blit(text, (400 - text.get_width() // 2, 240 - text.get_height()))
-        done = True
+        gameover = True
     if abs(x - x2) < 30 and abs(y - y2) < 30:
-        screen.blit(explosion, (x-50, y-50))
-        text = font1.render("Game Over", True, WHITE)
-        screen.blit(text, (400 - text.get_width() // 2, 240 - text.get_height()))
-        done = True
+        gameover = True
     if abs(x - x3) < 30 and abs(y - y3) < 30:
+        gameover = True
+
+    # Game Over
+    if gameover == True:
         screen.blit(explosion, (x-50, y-50))
         text = font1.render("Game Over", True, WHITE)
         screen.blit(text, (400 - text.get_width() // 2, 240 - text.get_height()))
-        done = True
 
     # 실제 그림을 그리는 명령
     pygame.display.flip()
     #pygame.display.update()
+
+    if gameover == True:
+        pygame.time.delay(1000)
+        score = 0
+        x = 400
+        y = 225
+        x_direction = 0
+        y_direction = 0
+        gameover = False
 
 pygame.time.delay(1000)
 
